@@ -61,13 +61,14 @@ int main(int argc, char* argv[]) {
     }
 
 	Graph graph(inputGfaFile);
-	graph.topo_sort();
+	// graph.topo_sort();
 
 	Query query(inputStringFile);
 
 	Alignment alignment(query.str, graph);
-	alignment.dp();
-	std::cout << alignment.edit_distance << std::endl;
+	// alignment.poa();
+	alignment.navarro();
+	std::cout << "The edit distance between the gfa file and the string is " << alignment.edit_distance << "." << std::endl;
 	alignment.print(outputPath);
 
     return 0;

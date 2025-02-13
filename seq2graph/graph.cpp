@@ -31,9 +31,10 @@ Graph::Graph(const std::string& inputGfaFile) {
     ifs0.close();
 
     father = std::vector <std::vector <int> > (totalBases, std::vector <int>());
+    edge = std::vector <std::vector <int> > (totalBases, std::vector <int>());
     baseVec = std::vector <char> (totalBases);
     inDegree = std::vector <int> (totalBases);
-    generation = std::vector <int> (totalBases, totalBases);
+    // generation = std::vector <int> (totalBases, totalBases);
     std::map <std::string, std::pair<int, int> > segmentBE;
 
     std::ifstream ifs1(inputGfaFile);
@@ -58,6 +59,7 @@ Graph::Graph(const std::string& inputGfaFile) {
                 baseVec[baseID] = s;
                 if (baseID != BID) {
                     father[baseID].push_back(baseID - 1);
+                    edge[baseID - 1].push_back(baseID);
                     inDegree[baseID] ++;
                 }
                 baseID ++;
@@ -88,23 +90,33 @@ Graph::Graph(const std::string& inputGfaFile) {
             if (tokens[2] == "+") {
                 if (tokens[4] == "+") {
                     father[segmentBE[tokens[3]].first].push_back(segmentBE[tokens[1]].second);
+                    edge[segmentBE[tokens[1]].second].push_back(segmentBE[tokens[3]].first);
                     inDegree[segmentBE[tokens[3]].first] ++;
                 } else {
                     father[segmentBE[tokens[3]].second].push_back(segmentBE[tokens[1]].second);
+                    edge[segmentBE[tokens[1]].second].push_back(segmentBE[tokens[3]].second);
                     inDegree[segmentBE[tokens[3]].second] ++;
                 }
             } else {
                 if (tokens[4] == "+") {
                     father[segmentBE[tokens[3]].first].push_back(segmentBE[tokens[1]].first);
+                    edge[segmentBE[tokens[1]].first].push_back(segmentBE[tokens[3]].first);
                     inDegree[segmentBE[tokens[3]].first] ++;
                 } else {
                     father[segmentBE[tokens[3]].second].push_back(segmentBE[tokens[1]].first);
+                    edge[segmentBE[tokens[1]].first].push_back(segmentBE[tokens[3]].second);
                     inDegree[segmentBE[tokens[3]].second] ++;
                 }
             }
         }
     }
     ifs2.close();
+
+    for (int i = 0; i < totalBases; i ++) {
+        if (! inDegree[i]) {
+            father[i].push_back(-1);
+        }
+    }
 }
 
 
@@ -113,18 +125,15 @@ Graph::~Graph() {}
 
 void Graph::topo_sort() {
     std::queue <int> que;
-    std::vector <std::vector <int> > edge = std::vector <std::vector <int> > (totalBases, std::vector <int>());
 
     for (int i = 0; i < totalBases; i ++) {
-        for (auto f: father[i]) {
-            edge[f].push_back(i);
-            generation[i] = std::min(generation[f] + 1, generation[i]);
-        }
+        // for (auto f: father[i]) {
+        //     generation[i] = std::min(generation[f] + 1, generation[i]);
+        // }
         if (! inDegree[i]) {
             que.push(i);
             topoOrder.push_back(i + 1);
-            father[i].push_back(-1);
-            generation[i] = 1;
+            // generation[i] = 1;
         }
     }
 

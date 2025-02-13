@@ -15,9 +15,9 @@
 class Graph {
     public:
         int totalBases;
-        std::vector <std::vector <int> > father;
+        std::vector <std::vector <int> > father, edge;
         std::vector <char> baseVec;
-        std::vector <int> topoOrder, generation;
+        std::vector <int> topoOrder;
 
         Graph(const std::string&);
         ~Graph();

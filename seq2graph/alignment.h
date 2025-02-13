@@ -17,8 +17,8 @@ class Alignment {
         Alignment(const std::string&, const Graph&);
         ~Alignment();
 
-        void dp();
-        void hirschberg_path();
+        void poa();
+        void navarro();
         void print(const std::string&);
 
     private:
@@ -26,9 +26,7 @@ class Alignment {
         const Graph& graph;
         int lquery, lgraph;
 
-        int hirschberg_core(int, int, int, int, std::vector <std::vector <int> >&);
-        void fwd_calc_align_matirx(int, int, int, int, std::vector <int>&);
-        void rev_calc_align_matrix(int, int, int, int, std::vector <int>&);
+        void propagate(int, int, int, std::vector< std::vector <int> >&, std::vector< std::vector <std::pair<int, int> > >&);
 };
 
 #endif

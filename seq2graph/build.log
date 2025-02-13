@@ -4,4 +4,18 @@ g++ -Wall -Ofast -std=c++1z -fopenmp -fPIE  -o alignment.o -c alignment.cpp
 g++ -Wall -Ofast -std=c++1z -fopenmp -fPIE  -o graph.o -c graph.cpp
 g++ -Wall -Ofast -std=c++1z -fopenmp -fPIE  -o main.o -c main.cpp
 g++ -Wall -Ofast -std=c++1z -fopenmp -fPIE  -o query.o -c query.cpp
+alignment.cpp: In member function 'void Alignment::navarro()':
+alignment.cpp:127:41: warning: 'idxj' may be used uninitialized [-Wmaybe-uninitialized]
+  127 |         int fi = front_matrix[idxi][idxj].first, fj = front_matrix[idxi][idxj].second;
+      |                                         ^
+alignment.cpp:117:24: note: 'idxj' was declared here
+  117 |     int idxi = lquery, idxj;
+      |                        ^~~~
+alignment.cpp: In member function 'void Alignment::poa()':
+alignment.cpp:63:41: warning: 'idxj' may be used uninitialized [-Wmaybe-uninitialized]
+   63 |         int fi = front_matrix[idxi][idxj].first, fj = front_matrix[idxi][idxj].second;
+      |                                         ^
+alignment.cpp:53:24: note: 'idxj' was declared here
+   53 |     int idxi = lquery, idxj;
+      |                        ^~~~
 g++ -Wall -Ofast -std=c++1z -fopenmp -fPIE  -o seq2graph.exe alignment.o graph.o main.o query.o
