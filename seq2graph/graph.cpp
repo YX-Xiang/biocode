@@ -112,8 +112,8 @@ Graph::~Graph() {}
 
 
 void Graph::topo_sort() {
-    std::vector <std::vector <int> > edge = std::vector <std::vector <int> > (totalBases, std::vector <int>());
     std::queue <int> que;
+    std::vector <std::vector <int> > edge = std::vector <std::vector <int> > (totalBases, std::vector <int>());
 
     for (int i = 0; i < totalBases; i ++) {
         for (auto f: father[i]) {

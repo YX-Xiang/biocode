@@ -76,6 +76,136 @@ void Alignment::dp() {
 }
 
 
+// void Alignment::hirschberg_path() {
+//     std::vector <std::vector <int> > xy = std::vector <std::vector <int> > (64, std::vector <int> (4));
+//     std::vector <std::vector <int> > row = std::vector <std::vector <int> > (2, std::vector <int> (lgraph));
+//     std::vector <int> path = std::vector <int> (lquery);
+//     int p = 0, x1, x2, y1, y2, x3, y3, smax = -0x7FFFFFFF;
+//     xy[p][0] = 0; xy[p][1] = lgraph; xy[p][2] = 0; xy[p][3] = lquery;
+
+//     while(p >= 0) {
+//         x1 = xy[p][0]; x2 = xy[p][1]; y1 = xy[p][2]; y2 = xy[p][3]; p --;
+//         y3 = ((y1 + y2) >> 1);
+//         x3 = hirschberg_core(x1, x2, y1, y2, row);
+//         path[y3] = x3;
+//         if (smax == -0x7FFFFFFF) {
+//             smax = row[0][x3];
+//         }
+
+//         if (y1 == y3) {
+//             x3 ++;
+//         }
+//         if (x1 == x3) {
+//             y3 ++;
+//         }
+//         if (x1 < x3 && y1 < y3) {
+//             p ++;
+//             xy[p][0] = x1; xy[p][1] = x3;
+//             xy[p][2] = y1; xy[p][3] = y3;
+//         }
+//         if (x2 > x3 && y2 > y3) {
+//             p ++;
+//             xy[p][0] = x3; xy[p][1] = x2;
+//             xy[p][2] = y3; xy[p][3] = y2;
+//         }
+//     }
+//     edit_distance = smax;
+// }
+
+
+// // 初始时 graphb = 0， graphe = lgraph，seqb = 0，seqe = lquery
+// int Alignment::hirschberg_core(int graphb, int graphe, int seqb, int seqe, std::vector <std::vector <int> >& row) {
+//     int seq_mid = (seqb + seqe) >> 1;
+//     // if (graphb + 1 >= graphe || seqb + 1 >= seqe) {
+//     //     return (seqb + seqe) >> 1;
+//     // }
+
+//     // 初始化增的开销
+//     for (int i = graphb; i < graphe; i ++) {
+//         row[0][graph.topoOrder[i]] = graph.generation[graph.topoOrder[i]] - graph.generation[graph.topoOrder[graphb]] + 1;
+//     }
+//     for (int i = graphb; i < graphe; i ++) {
+//         row[1][graph.topoOrder[i]] = graph.generation[graph.topoOrder[graphe - 1]] - graph.generation[graph.topoOrder[i]] + 1;
+//     }
+
+//     fwd_calc_align_matirx(graphb, graphe, seqb, seqb + seq_mid, row[0]);
+//     rev_calc_align_matrix(graphb, graphe, seqb + seq_mid, seqe, row[1]);
+
+//     int query_x;
+//     for (int i = graphb; i < graphe; i ++) {
+//         row[0][graph.topoOrder[i]] += row[1][graph.topoOrder[i]];
+//         if (row[0][graph.topoOrder[i]] > row[0][graph.topoOrder[query_x]]) {
+//             query_x = i;
+//         }
+//     }
+//     return query_x;
+// }
+
+
+// // 改和增是通过 father 状态转移的
+// void Alignment::fwd_calc_align_matirx (int graphb, int graphe, int seqb, int seqe, std::vector <int>& row) {
+//     std::vector <int> score = std::vector <int> (lgraph);
+//     for (int y = seqb; y < seqe; y ++) {
+//         for (int x = graphb; x < graphe; x ++) {
+//             int node = graph.topoOrder[x];
+//             for (auto fID: graph.father[node]) {
+//                 if (fID >= 0 && graph.generation[fID] >= graph.generation[graph.topoOrder[graphb]]) {
+//                     // 改
+//                     score[x] = row[fID] + (query[y] == graph.baseVec[node] ? 0 : 1);
+//                     // 增
+//                     score[x] = std::min(score[x], score[fID] + 1);
+//                 } else {
+//                     // 改
+//                     score[x] = (query[y] == graph.baseVec[node] ? 0 : 1);
+//                     // 增
+//                     score[x] = std::min(score[x], y - seqb + 1);
+//                 }
+//             }
+//             // 删
+//             score[x] = std::min(score[x], row[x] + 1);
+//         }
+//         for (int x = graphb; x < graphe; x ++) {
+//             row[x] = score[x];
+//         }
+//     }
+// }
+
+
+// // 改和增是通过 edge 状态转移的
+// void Alignment::rev_calc_align_matrix (int graphb, int graphe, int seqb, int seqe, std::vector <int>& row) {
+//     std::vector <int> score = std::vector <int> (lgraph);
+//     for (int y = seqe - 1; y >= seqb; y --) {
+//         for (int x = graphe - 1; x >= graphb; x --) {
+//             int node = graph.topoOrder[x];
+//             if (graph.edge[node].empty()) {
+//                 // 改
+//                 score[x] = (query[y] == graph.baseVec[node] ? 0 : 1);
+//                 // 增
+//                 score[x] = std::min(score[x], y - seqe + 2);
+//             }
+//             for (auto sID: graph.edge[node]) {
+//                 if (graph.generation[sID] <= graph.generation[graph.topoOrder[graphe - 1]]) {
+//                     // 改
+//                     score[x] = row[sID] + (query[y] == graph.baseVec[node] ? 0 : 1);
+//                     // 增
+//                     score[x] = std::min(score[x], score[sID] + 1);
+//                 } else {
+//                     // 改
+//                     score[x] = seqe - y - 1 + (query[y] == graph.baseVec[node] ? 0 : 1);
+//                     // 增
+//                     score[x] = std::min(score[x], seqe - y);
+//                 }
+//             }
+//             // 删
+//             score[x] = std::min(score[x], row[x] + 1);
+//         }
+//         for (int x = graphb; x < graphe; x ++) {
+//             row[x] = score[x];
+//         }
+//     }
+// }
+
+
 void Alignment::print(const std::string& outputPath) {
     std::filesystem::create_directories(outputPath);
     std::string outputFile;

@@ -1,7 +1,7 @@
 rm -f alignment.o graph.o main.o query.o
 rm -f seq2graph.exe
-g++ -Wall -Ofast -std=c++1z -fopenmp -o alignment.o -c alignment.cpp
-g++ -Wall -Ofast -std=c++1z -fopenmp -o graph.o -c graph.cpp
-g++ -Wall -Ofast -std=c++1z -fopenmp -o main.o -c main.cpp
-g++ -Wall -Ofast -std=c++1z -fopenmp -o query.o -c query.cpp
-g++ -Wall -Ofast -std=c++1z -fopenmp -o seq2graph.exe alignment.o graph.o main.o query.o
+g++ -Wall -Ofast -std=c++1z -fopenmp -fPIE  -o alignment.o -c alignment.cpp
+g++ -Wall -Ofast -std=c++1z -fopenmp -fPIE  -o graph.o -c graph.cpp
+g++ -Wall -Ofast -std=c++1z -fopenmp -fPIE  -o main.o -c main.cpp
+g++ -Wall -Ofast -std=c++1z -fopenmp -fPIE  -o query.o -c query.cpp
+g++ -Wall -Ofast -std=c++1z -fopenmp -fPIE  -o seq2graph.exe alignment.o graph.o main.o query.o

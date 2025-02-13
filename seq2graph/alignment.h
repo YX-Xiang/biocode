@@ -18,12 +18,17 @@ class Alignment {
         ~Alignment();
 
         void dp();
+        void hirschberg_path();
         void print(const std::string&);
 
     private:
         const std::string& query;
         const Graph& graph;
         int lquery, lgraph;
+
+        int hirschberg_core(int, int, int, int, std::vector <std::vector <int> >&);
+        void fwd_calc_align_matirx(int, int, int, int, std::vector <int>&);
+        void rev_calc_align_matrix(int, int, int, int, std::vector <int>&);
 };
 
 #endif
